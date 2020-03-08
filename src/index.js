@@ -32,10 +32,9 @@ function main() {
   var gl = cs.getContext("webgl2");
 
   var prog = new Program(gl, vertSrc, fragSrc);
-  //var program = createProgram(gl, vertSrc, fragSrc);
 
   // get uniform and attrib locations
-  var vertexLocation = gl.getAttribLocation(prog.program, "a_position");
+  //var vertexLocation = gl.getAttribLocation(prog.program, "a_position");
   var colourLocation = gl.getAttribLocation(prog.program, "a_colour");
   var pMatrix = new UniformMatrix(gl, prog.program, "u_proj");
   var mMatrix = new UniformMatrix(gl, prog.program, "u_model");
@@ -85,18 +84,20 @@ function main() {
   const vao = gl.createVertexArray();
   gl.bindVertexArray(vao);
 
-  const positionBuffer = new Buffer(
+  const positionBuffer = new VertexAttrib(
     gl,
     gl.ARRAY_BUFFER,
     new Float32Array(vertices),
-    gl.STATIC_DRAW
+    gl.STATIC_DRAW,
+    "a_position",
+    prog.program
   );
 
   const indexBuffer = new Buffer(
     gl,
     gl.ELEMENT_ARRAY_BUFFER,
     new Uint16Array(indices),
-    gl.STATIC_DRAW
+    gl.STATIC_DRAW,
   );
 
   const colourBuffer = new Buffer(
@@ -120,11 +121,11 @@ function main() {
   var then = 0;
 
   function draw(now) {
-    const delta = (now - then) * 0.0004;
+    const delta = (now - then) * 0.0001;
     then = now;
 
     //mat4.translate(model, model, );
-    mat4.rotateY(model, model, -delta);
+    mat4.rotateY(model, model, -delta * 3);
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clearDepth(1.0);
@@ -134,9 +135,11 @@ function main() {
     gl.depthFunc(gl.LEQUAL);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    positionBuffer.bind();
+    /*positionBuffer.bind();
     gl.vertexAttribPointer(vertexLocation, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vertexLocation);
+    */
+    positionBuffer.use(3, gl.FLOAT, false, 0, 0);
 
     colourBuffer.bind();
     gl.vertexAttribPointer(colourLocation, 4, gl.FLOAT, false, 0, 0);
