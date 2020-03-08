@@ -90,7 +90,6 @@ function main() {
     prog.program
   );
 
-
   const colourBuffer = new VertexAttrib(
     gl,
     gl.ARRAY_BUFFER,

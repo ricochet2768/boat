@@ -1,21 +1,5 @@
+// Various classes to help with abstraction of parts of the program
 
-// Provides an abstraction for a matrix
-// gl: webgl context
-// program: program variable
-// name: name of the uniform in the shader
-class UniformMatrix {
-    constructor(gl, program, name) {
-      this.name = name;
-      this.gl = gl;
-  
-      this.location = this.gl.getUniformLocation(program, name);
-    }
-  
-    setData(data) {
-      this.gl.uniformMatrix4fv(this.location, false, data);
-    }
-} 
- 
 // Provides an abstraction for any type of buffer
 // gl: webgl context
 // type: type of buffer, used when binding
@@ -68,6 +52,29 @@ class VertexAttrib extends Buffer {
         this.gl.enableVertexAttribArray(this.location);
     }
 }
+
+class Item {
+    constructor(gl, program, ) {
+
+    }
+}
+
+// Provides an abstraction for a matrix
+// gl: webgl context
+// program: program variable
+// name: name of the uniform in the shader
+class UniformMatrix {
+    constructor(gl, program, name) {
+      this.name = name;
+      this.gl = gl;
+  
+      this.location = this.gl.getUniformLocation(program, name);
+    }
+  
+    setData(data) {
+      this.gl.uniformMatrix4fv(this.location, false, data);
+    }
+} 
 
 // Provides abstraction for a shader
 // gl: webgl context
