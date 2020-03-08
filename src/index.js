@@ -33,9 +33,6 @@ function main() {
 
   var prog = new Program(gl, vertSrc, fragSrc);
 
-  // get uniform and attrib locations
-  //var vertexLocation = gl.getAttribLocation(prog.program, "a_position");
-  var colourLocation = gl.getAttribLocation(prog.program, "a_colour");
   var pMatrix = new UniformMatrix(gl, prog.program, "u_proj");
   var mMatrix = new UniformMatrix(gl, prog.program, "u_model");
 
@@ -93,20 +90,23 @@ function main() {
     prog.program
   );
 
+
+  const colourBuffer = new VertexAttrib(
+    gl,
+    gl.ARRAY_BUFFER,
+    new Float32Array(colours),
+    gl.STATIC_DRAW,
+    "a_colour",
+    prog.program
+  );
+
   const indexBuffer = new Buffer(
     gl,
     gl.ELEMENT_ARRAY_BUFFER,
     new Uint16Array(indices),
     gl.STATIC_DRAW,
   );
-
-  const colourBuffer = new Buffer(
-    gl,
-    gl.ARRAY_BUFFER,
-    new Float32Array(colours),
-    gl.STATIC_DRAW
-  );
-
+  
   const fov = PI / 2;
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
@@ -116,15 +116,12 @@ function main() {
 
   var model = mat4.create();
   mat4.translate(model, model, [-0.0, -0.25, -1.5]);
-  //mat4.rotateZ(model, model, -PI / 12);
 
   var then = 0;
-
   function draw(now) {
     const delta = (now - then) * 0.0001;
     then = now;
 
-    //mat4.translate(model, model, );
     mat4.rotateY(model, model, -delta * 3);
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -135,15 +132,9 @@ function main() {
     gl.depthFunc(gl.LEQUAL);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    /*positionBuffer.bind();
-    gl.vertexAttribPointer(vertexLocation, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vertexLocation);
-    */
     positionBuffer.use(3, gl.FLOAT, false, 0, 0);
 
-    colourBuffer.bind();
-    gl.vertexAttribPointer(colourLocation, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(colourLocation);
+    colourBuffer.use(4, gl.FLOAT, false, 0, 0);
 
     gl.useProgram(prog.program);
 
